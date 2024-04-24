@@ -1,28 +1,25 @@
-
-
 const moreThen2 = {};
 const moreThen5 = {};
 
-document.getElementById('fileInput').addEventListener('change', handel);
+document.getElementById('fileInput').addEventListener('change', handle);
 
-function handel(e) {
+function handle(e) {
     const file = e.target.files[0];
     const reader = new FileReader();
 
-    reader.onload = function(event) {
+    reader.onload = function (event) {
         const data = new Uint8Array(event.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
         const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        const dates = getDate(jsonData); 
-
-        buildObjects(jsonData, dates); 
+        const dates = getDate(jsonData);
+       
+        buildObjects(jsonData, dates);
 
         console.log(moreThen2);
         console.log(moreThen5);
-        
     };
 
     reader.readAsArrayBuffer(file);
@@ -30,51 +27,51 @@ function handel(e) {
 
 function buildObjects(jsonData, dates) {
     for (let i = 5; i < jsonData.length; i++) {
-        console.log('Current row:', jsonData[i]);
-
         const row = jsonData[i];
         const value = row[0];
+        const manager = row[1];
 
-        for (let j = 4; j < dates.length; j++) {
+        for (let j = 0; j < dates.length; j++) {
             const currentDate = dates[j];
-            const standardIndex = 1 + 3 * j;
-          
-            const performance = jsonData[i][standardIndex + 1];
-            const gap = jsonData[i][standardIndex + 2];
+            console.log(currentDate)
 
-            console.log('Performance:', performance);
-            console.log('Gap:', gap);
+            const performance = jsonData[i][j * 3 + 1];
+            const gap = jsonData[i][j * 3 + 2];
 
-            if ((jsonData[i][standardIndex] !== undefined) && (gap < -2)) {
-                let data = { [currentDate]: {
-                            "תקן": jsonData[i][standardIndex],
-                            "ביצוע": performance,
-                            "פער": gap
-                        }
+            if ((jsonData[i][j * 3 + 3] !== undefined) && (gap < -2)) {
+                let data = {
+                    "תקן": jsonData[i][j * 3],
+                    "ביצוע": performance,
+                    "פער": gap
                 };
-                moreThen2[value] = data;
-            } else if ((jsonData[i][standardIndex] === undefined) && (gap < -5)) {
-                let data= {[currentDate]: {
-                            "תקן": undefined,
-                            "ביצוע": performance,
-                            "פער": gap
-                        }
-                    
+                if (!moreThen2[value]) {
+                    moreThen2[value] = {};
+                }
+                moreThen2[value][currentDate] = data;
+                moreThen2[value]["מנהל"]= manager
+                debugger
+            } 
+             if ((jsonData[i][j * 3 + 3] === undefined ) && (gap < -5)) {
+                let data = {
+                    "תקן": undefined,
+                    "ביצוע": performance,
+                    "פער": gap,
                 };
-                moreThen5[value] = data;
+                if (!moreThen5[value]) {
+                    moreThen5[value] = {};
+                }
+                moreThen5[value][currentDate] = data;
+            moreThen5[value]["מנהל"] = manager
+            debugger
             }
         }
     }
 }
 
-
-
-
-
 function getDate(jsonData) {
     const dates = [];
-    for (let i = 3; i < jsonData[0].length; i++) {
-        const excelDateValue = jsonData[0][i];
+    for (let i = 3; i < jsonData[3].length; i++) {
+        const excelDateValue = jsonData[3][i];
         const jsDate = new Date((excelDateValue - (25567 + 2)) * 86400 * 1000);
         const formattedDate = moment(jsDate).format('YYYY-MM-DD');
         if (formattedDate !== "Invalid date") {
@@ -84,24 +81,17 @@ function getDate(jsonData) {
     return dates;
 }
 
+document.querySelector("#downloadExcel").addEventListener("click", createNewExcel);
 
-
-
-
-
-
-
-document.querySelector("#downloadExcel").addEventListener("click",creatNewExcel)
-
-function creatNewExcel() {
+function createNewExcel() {
     let headers = ["שם מקור דיווח ", "תאריך", "תקן", "ביצוע", "פער"];
     let combinedData = [headers];
     let combinedData5 = [headers];
 
     buildRows(moreThen2, combinedData);
     buildRows(moreThen5, combinedData5);
-console.log(combinedData)
-console.log(combinedData5)
+    console.log(combinedData);
+    console.log(combinedData5);
     const workbook = XLSX.utils.book_new();
 
     const worksheet = XLSX.utils.aoa_to_sheet(combinedData);
@@ -116,10 +106,10 @@ console.log(combinedData5)
     console.log("Data has been successfully exported to output.xlsx");
 }
 
-function buildRows(fiveOrTow, array) {
-    for (let store in fiveOrTow) {
-        for (let date in fiveOrTow[store]) {
-            const dateData = fiveOrTow[store][date];
+function buildRows(fiveOrTwo, array) {
+    for (let store in fiveOrTwo) {
+        for (let date in fiveOrTwo[store]) {
+            const dateData = fiveOrTwo[store][date];
             const rowData = [
                 store,
                 date,
