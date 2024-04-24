@@ -35,10 +35,10 @@ function buildObjects(jsonData, dates) {
             const currentDate = dates[j];
             console.log(currentDate)
 
-            const performance = jsonData[i][j * 3 + 1];
-            const gap = jsonData[i][j * 3 + 2];
+            const performance = jsonData[i][j  + 4];
+            const gap = jsonData[i][j  + 5];
 
-            if ((jsonData[i][j * 3 + 3] !== undefined) && (gap < -2)) {
+            if ((jsonData[i][j+ 3] !== undefined) && (gap < -2)) {
                 let data = {
                     "תקן": jsonData[i][j * 3],
                     "ביצוע": performance,
@@ -51,7 +51,7 @@ function buildObjects(jsonData, dates) {
                 moreThen2[value]["מנהל"]= manager
                 debugger
             } 
-             if ((jsonData[i][j * 3 + 3] === undefined ) && (gap < -5)) {
+             if ((jsonData[i][j  + 3] === undefined ) && (gap < -5)) {
                 let data = {
                     "תקן": undefined,
                     "ביצוע": performance,
