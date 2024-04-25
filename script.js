@@ -1,3 +1,6 @@
+
+
+
 const moreThen2 = {};
 const moreThen5 = {};
 
@@ -13,9 +16,11 @@ function handle(e) {
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
-        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const jsonData = XLSX.utils.sheet_to_json(sheet);
+       console.log(jsonData)
+
         const dates = getDate(jsonData);
-       
+        console.log(dates)
         buildObjects(jsonData, dates);
 
         console.log(moreThen2);
@@ -26,60 +31,35 @@ function handle(e) {
 }
 
 function buildObjects(jsonData, dates) {
-    for (let i = 5; i < jsonData.length; i++) {
+    for (let i = 1; i < jsonData.length; i++) { 
         const row = jsonData[i];
-        const value = row[0];
-        const manager = row[1];
+        const value = row[0]; 
+        const manager = row[1]; 
 
-        for (let j = 0; j < dates.length; j++) {
-            const currentDate = dates[j];
-            console.log(currentDate)
-
-            const performance = jsonData[i][j  + 4];
-            const gap = jsonData[i][j  + 5];
-
-            if ((jsonData[i][j+ 3] !== undefined) && (gap < -2)) {
-                let data = {
-                    "תקן": jsonData[i][j * 3],
-                    "ביצוע": performance,
-                    "פער": gap
-                };
-                if (!moreThen2[value]) {
-                    moreThen2[value] = {};
-                }
-                moreThen2[value][currentDate] = data;
-                moreThen2[value]["מנהל"]= manager
-                debugger
-            } 
-             if ((jsonData[i][j  + 3] === undefined ) && (gap < -5)) {
-                let data = {
-                    "תקן": undefined,
-                    "ביצוע": performance,
-                    "פער": gap,
-                };
-                if (!moreThen5[value]) {
-                    moreThen5[value] = {};
-                }
-                moreThen5[value][currentDate] = data;
-            moreThen5[value]["מנהל"] = manager
-            debugger
-            }
-        }
+      console.log(row)
+      console.log(value)
+      console.log(manager)
     }
 }
+
 
 function getDate(jsonData) {
     const dates = [];
-    for (let i = 3; i < jsonData[3].length; i++) {
-        const excelDateValue = jsonData[3][i];
-        const jsDate = new Date((excelDateValue - (25567 + 2)) * 86400 * 1000);
-        const formattedDate = moment(jsDate).format('YYYY-MM-DD');
-        if (formattedDate !== "Invalid date") {
-            dates.push(formattedDate);
+    for (let dateKey in jsonData[0]) { 
+        if (!dateKey.includes("EMPTY") && !dateKey.includes("סה")) {
+dates.push(dateKey);
         }
+        
     }
     return dates;
 }
+
+
+
+
+
+
+
 
 document.querySelector("#downloadExcel").addEventListener("click", createNewExcel);
 
