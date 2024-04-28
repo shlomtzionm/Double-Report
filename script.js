@@ -14,8 +14,9 @@ function handle(e) {
         const sheet = workbook.Sheets[sheetName];
 
         const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
         const dates = getDate(jsonData);
-       
+       console.log(jsonData)
         buildObjects(jsonData, dates);
 
         console.log(moreThen2);
@@ -31,25 +32,29 @@ function buildObjects(jsonData, dates) {
         const value = row[0];
         const manager = row[1];
 
+        // Initialize moreThen5[value] if it's not already initialized
+      
+      
+
         for (let j = 0; j < dates.length; j++) {
             const currentDate = dates[j];
-            const performance = jsonData[i][j *3 + 4];
-            const gap = jsonData[i][j*3  + 5];
+            const performance = jsonData[i][j * 3 + 4];
+            const gap = jsonData[i][j * 3 + 5];
 
-            if ((jsonData[i][j+ 3] !== undefined) && (gap < -2)) {
+            if ((jsonData[i][j * 3 + 3] !== undefined) && (gap < -2)) {
                 let data = {
-                    "תקן": jsonData[i][j*3 + 3],
+                    "תקן": jsonData[i][j * 3 + 3],
                     "ביצוע": performance,
                     "פער": gap
                 };
-               
+                if (!moreThen2[value]) {
                     moreThen2[value] = {};
-                
+                }
+                // Set data to moreThan2
                 moreThen2[value][currentDate] = data;
-                moreThen2[value]["מנהל"]= manager
-              
-            } 
-             if ((jsonData[i][j *3 + 3] === undefined ) && (gap < -5)) {
+                moreThen2[value]["מנהל"] = manager;
+            }
+            if ((jsonData[i][j * 3 + 3] === undefined) && (gap < -5)) {
                 let data = {
                     "תקן": "",
                     "ביצוע": performance,
@@ -57,21 +62,24 @@ function buildObjects(jsonData, dates) {
                 };
                 if (!moreThen5[value]) {
                     moreThen5[value] = {};
-                }
+                } 
+        
+                // Set data to moreThan5
                 moreThen5[value][currentDate] = data;
-            moreThen5[value]["מנהל"] = manager
-       
+                moreThen5[value]["מנהל"] = manager;
             }
         }
     }
 }
 
+
 function getDate(jsonData) {
     const dates = [];
-    for (let i = 3; i < jsonData[3].length; i++) {
-        const excelDateValue = jsonData[3][i];
+    for (let i = 3; i < jsonData[0].length; i++) {
+        const excelDateValue = jsonData[0][i];
         const jsDate = new Date((excelDateValue - (25567 + 2)) * 86400 * 1000);
         const formattedDate = moment(jsDate).format('YYYY-MM-DD');
+      
         if (formattedDate !== "Invalid date") {
             dates.push(formattedDate);
         }
