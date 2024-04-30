@@ -1,9 +1,14 @@
 const moreThen2 = {};
 const moreThen5 = {};
+let counter = 0
+let body = document.querySelector("body");
+let downloadButton = document.querySelector("#downloadExcel")
+let fileInput = document.getElementById('fileInput')
 
-document.getElementById('fileInput').addEventListener('change', handle);
+fileInput.addEventListener('change', handle);
 
 function handle(e) {
+
     const file = e.target.files[0];
     const reader = new FileReader();
 
@@ -24,17 +29,21 @@ function handle(e) {
     };
 
     reader.readAsArrayBuffer(file);
+    checkCounter()
+    counter++
 }
 
+function checkCounter(){
+    if(counter !== 0){
+        reset()
+        debugger
+    }
+}
 function buildObjects(jsonData, dates) {
     for (let i = 5; i < jsonData.length; i++) {
         const row = jsonData[i];
         const value = row[0];
         const manager = row[1];
-
-        // Initialize moreThen5[value] if it's not already initialized
-      
-      
 
         for (let j = 0; j < dates.length; j++) {
             const currentDate = dates[j];
@@ -50,7 +59,7 @@ function buildObjects(jsonData, dates) {
                 if (!moreThen2[value]) {
                     moreThen2[value] = {};
                 }
-                // Set data to moreThan2
+            
                 moreThen2[value][currentDate] = data;
                 moreThen2[value]["מנהל"] = manager;
             }
@@ -64,12 +73,13 @@ function buildObjects(jsonData, dates) {
                     moreThen5[value] = {};
                 } 
         
-                // Set data to moreThan5
+             
                 moreThen5[value][currentDate] = data;
                 moreThen5[value]["מנהל"] = manager;
             }
         }
     }
+    creatDownloadButton()
 }
 
 
@@ -87,10 +97,9 @@ function getDate(jsonData) {
     return dates;
 }
 
-document.querySelector("#downloadExcel").addEventListener("click", createNewExcel);
 
 function createNewExcel() {
-    let headers = ["שם מקור דיווח ", "תאריך", "תקן", "ביצוע", "פער"];
+    let headers = ["שם מקור דיווח ", "תאריך", "תקן", "ביצוע", "פער","מנהל"];
     let combinedData = [headers];
     let combinedData5 = [headers];
 
@@ -106,10 +115,8 @@ function createNewExcel() {
     XLSX.utils.book_append_sheet(workbook, worksheet, '2');
     XLSX.utils.book_append_sheet(workbook, worksheet5, '5');
 
-    // Save the workbook to a file
     XLSX.writeFile(workbook, 'output.xlsx');
 
-    console.log("Data has been successfully exported to output.xlsx");
 }
 
 function buildRows(fiveOrTwo, array) {
@@ -131,3 +138,22 @@ function buildRows(fiveOrTwo, array) {
         }
     }
 }
+
+function creatDownloadButton() {
+    let button = document.createElement('button');
+  
+    button.innerHTML = "Download Excel";
+    button.id = "downloadExcel";
+
+    body.appendChild(button);
+    
+button.addEventListener("click", createNewExcel);
+}
+
+
+
+function reset(){
+fileInput.value=""
+body.removeChild(downloadButton)
+}
+
