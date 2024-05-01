@@ -141,10 +141,8 @@ function buildRows(fiveOrTwo, array) {
 
 function creatDownloadButton() {
     let button = document.createElement('button');
-  
-    button.innerHTML = "Download Excel";
     button.id = "downloadExcel";
-
+button.innerHTML="להורדת דוח כפילויות"
     body.appendChild(button);
     
 button.addEventListener("click", createNewExcel);
@@ -155,5 +153,7 @@ button.addEventListener("click", createNewExcel);
 function reset(){
 fileInput.value=""
 body.removeChild(downloadButton)
+moreThen2={}
+moreThen5={}
 }
 
