@@ -2,17 +2,17 @@ const moreThen2 = {};
 const moreThen5 = {};
 let counter = 0
 let body = document.querySelector("body");
-let downloadButton = document.querySelector("#downloadExcel")
 let fileInput = document.getElementById('fileInput')
 
 fileInput.addEventListener('change', handle);
 
 function handle(e) {
-
+  
     const file = e.target.files[0];
     const reader = new FileReader();
-
+    removeButton()
     reader.onload = function (event) {
+      
         const data = new Uint8Array(event.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
@@ -29,16 +29,10 @@ function handle(e) {
     };
 
     reader.readAsArrayBuffer(file);
-    checkCounter()
-    counter++
+  
 }
 
-function checkCounter(){
-    if(counter !== 0){
-        reset()
-        debugger
-    }
-}
+
 function buildObjects(jsonData, dates) {
     for (let i = 5; i < jsonData.length; i++) {
         const row = jsonData[i];
@@ -148,12 +142,9 @@ button.innerHTML="להורדת דוח כפילויות"
 button.addEventListener("click", createNewExcel);
 }
 
-
-
-function reset(){
-fileInput.value=""
-body.removeChild(downloadButton)
-moreThen2={}
-moreThen5={}
+function removeButton() {
+    const buttonToRemove = document.querySelector("#downloadExcel");
+    if (buttonToRemove) {
+        buttonToRemove.parentNode.removeChild(buttonToRemove);
+    }
 }
-
