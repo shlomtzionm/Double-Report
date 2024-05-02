@@ -1,9 +1,46 @@
-body{
-    width: 300px;
-    height: 300px;
-    margin: 200px auto;
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    text-align: center; /* Center text horizontally */
 }
 
-#fileInput{
-margin-bottom: 20px;
+input[type="file"] {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    width: 200px; /* Adjust width as needed */
+}
+
+input[type="file"]:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#downloadExcel {
+    margin-top: 20px; /* Add margin to create space between the input and button */
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #0064cf;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#downloadExcel:hover {
+    background-color: #00458f;
 }
