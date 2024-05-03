@@ -2,18 +2,18 @@ const moreThen = {
     2: {},
     5: {}
 };
+
 let body = document.querySelector("body");
 let fileInput = document.getElementById('fileInput')
 
-fileInput.addEventListener('change', handle);
+fileInput.addEventListener('change', handleExcel);
 
-function handle(e) {
-  
+function handleExcel(e) {
     const file = e.target.files[0];
     const reader = new FileReader();
     removeDownloadButton()
+
     reader.onload = function (event) {
-      
         const data = new Uint8Array(event.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
@@ -22,8 +22,8 @@ function handle(e) {
 
         const dates = getDates(jsonData);
         buildObjects(jsonData, dates);
-console.log(moreThen)
     }
+
     reader.readAsArrayBuffer(file);
 }
 
@@ -62,10 +62,10 @@ function buildObjects(jsonData, dates) {
     }
     
     function pushToMoreThen(towOrFive, value, currentDate, data, manager) {
-        let object = moreThen[towOrFive][value]; // Access the correct object
+        let object = moreThen[towOrFive][value]; 
         if (!object) {
             object = {};
-            moreThen[towOrFive][value] = object; // Set it back in the main object
+            moreThen[towOrFive][value] = object; 
         }
         object[currentDate] = data;
         object["מנהל"] = manager;
