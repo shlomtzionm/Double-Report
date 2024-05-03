@@ -34,7 +34,7 @@ function handle(e) {
 
 
 function buildObjects(jsonData, dates) {
-    for (let i = 5; i < jsonData.length; i++) {
+    for (let i = 2; i < jsonData.length; i++) {
         const row = jsonData[i];
         const value = row[0];
         const manager = row[1];
