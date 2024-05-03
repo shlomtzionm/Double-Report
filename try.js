@@ -1,7 +1,6 @@
-const moreThen = {
-    2: {},
-    5: {}
-};
+const moreThen2 = {};
+const moreThen5 = {};
+
 let body = document.querySelector("body");
 let fileInput = document.getElementById('fileInput')
 
@@ -22,54 +21,37 @@ function handle(e) {
 
         const dates = getDates(jsonData);
         buildObjects(jsonData, dates);
-console.log(moreThen)
+console.log(moreThen2,moreThen5)
     }
     reader.readAsArrayBuffer(file);
 }
 
-function buildObjects(jsonData, dates) {
+function buildObjects(jsonData, dates) { 
     for (let i = 2; i < jsonData.length; i++) {
-        const row = jsonData[i];
-        const value = row[0];
-        const manager = row[1];
-    
-        for (let j = 0; j < dates.length; j++) {
-            const currentDate = dates[j];
-            const performance = jsonData[i][j * 3 + 4];
+         const row = jsonData[i]; 
+         const value = row[0]; 
+         const manager = row[1]; 
+         for (let j = 0; j < dates.length; j++) { 
+            const currentDate = dates[j]; 
+            const performance = jsonData[i][j * 3 + 4]; 
             const gap = jsonData[i][j * 3 + 5];
-    
-            if ((jsonData[i][j * 3 + 3] !== undefined) && (gap < -2)) {
-             
-                let data = builDateObj(performance,gap,jsonData,i,j)
-            pushToMoreThen(2,value,currentDate,data,manager)
-            } 
-            if ((jsonData[i][j * 3 + 3] === undefined) && (gap < -5)){
-                let data = builDateObj(performance,gap,jsonData,i,j)
-            pushToMoreThen(5,value,currentDate,data,manager)
-            }
-        }
-    }
-    creatDownloadButton()
-    }
-    
-    function builDateObj(performance,gap,jsonData,i,j){
-        let data = {
-            "תקן": jsonData[i][j * 3 + 3],
-            "ביצוע": performance,
-            "פער": gap,
-        };
-        return data
-    }
-    
-    function pushToMoreThen(towOrFive, value, currentDate, data, manager) {
-        let object = moreThen[towOrFive][value]; // Access the correct object
-        if (!object) {
-            object = {};
-            moreThen[towOrFive][value] = object; // Set it back in the main object
-        }
-        object[currentDate] = data;
-        object["מנהל"] = manager;
-    }
+             if ((jsonData[i][j * 3 + 3] !== undefined) && (gap < -2)) { 
+                let data = { "תקן": jsonData[i][j * 3 + 3], 
+                "ביצוע": performance, 
+                "פער": gap };
+                 if (!moreThen2[value]) {
+                     moreThen2[value] = {}; } 
+                     moreThen2[value][currentDate] = data;
+                      moreThen2[value]["מנהל"] = manager; } 
+                      if ((jsonData[i][j * 3 + 3] === undefined) && (gap < -5)) { 
+                        let data = { "תקן": "", 
+                        "ביצוע": performance, "פער": gap, };
+                         if (!moreThen5[value]) { 
+                            moreThen5[value] = {}; }
+                             moreThen5[value][currentDate] = data; 
+                             moreThen5[value]["מנהל"] = manager; } } 
+                            } creatDownloadButton() }
+
 
 function getDates(jsonData) {
     const dates = [];
@@ -91,8 +73,8 @@ function createNewExcel() {
     let combinedData = [headers];
     let combinedData5 = [headers];
 
-    buildRowsInNewFile(2, combinedData);
-    buildRowsInNewFile(5, combinedData5);
+    buildRowsInNewFile(moreThen2, combinedData);
+    buildRowsInNewFile(moreThen5, combinedData5);
 
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet(combinedData);
@@ -106,17 +88,17 @@ function createNewExcel() {
 }
 
 function buildRowsInNewFile(fiveOrTwo, array) {
-    for (let store in moreThen[fiveOrTwo]) {
-        for (let date in moreThen[fiveOrTwo][store]) {
+    for (let store in fiveOrTwo) {
+        for (let date in fiveOrTwo[store]) {
             if(date !== "מנהל"){
-                const dateData = moreThen[fiveOrTwo][store][date];
+                const dateData = fiveOrTwo[store][date];
                 const rowData = [
                     store,
                     date,
                     dateData["תקן"],
                     dateData["ביצוע"],
                     dateData["פער"],
-                    moreThen[fiveOrTwo][store]["מנהל"]
+                    fiveOrTwo[store]["מנהל"]
                 ];
                 array.push(rowData);
         
