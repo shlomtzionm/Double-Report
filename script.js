@@ -21,6 +21,7 @@ function handleExcel(e) {
         const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
         const dates = getDates(jsonData);
+        console.log(dates)
         buildObjects(jsonData, dates);
     }
 
@@ -35,6 +36,7 @@ function buildObjects(jsonData, dates) {
     
         for (let j = 0; j < dates.length; j++) {
             const currentDate = dates[j];
+
             const performance = jsonData[i][j * 3 + 4];
             const gap = jsonData[i][j * 3 + 5];
     
@@ -119,7 +121,7 @@ function buildRowsInNewFile(fiveOrTwo, array) {
                     moreThen[fiveOrTwo][store]["מנהל"]
                 ];
                 array.push(rowData);
-        
+  
             }
         }
     }
