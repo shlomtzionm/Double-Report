@@ -110,7 +110,7 @@ function createNewExcel() {
 function buildRowsInNewFile(fiveOrTwo, array) {
     for (let store in moreThen[fiveOrTwo]) {
         for (let date in moreThen[fiveOrTwo][store]) {
-            if(date !== "מנהל"){
+            if(date !== "מנהל" && store !== 'סה"כ'){
                 const dateData = moreThen[fiveOrTwo][store][date];
                 const rowData = [
                     store,
