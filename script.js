@@ -103,7 +103,7 @@ function createNewExcel() {
     XLSX.utils.book_append_sheet(workbook, worksheet, '2');
     XLSX.utils.book_append_sheet(workbook, worksheet5, '5');
 
-    XLSX.writeFile(workbook, 'output.xlsx');
+    XLSX.writeFile(workbook, 'כפילויות.xlsx');
 
 }
 
