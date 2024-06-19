@@ -51,7 +51,14 @@ function buildObjects(jsonData, dates) {
             }
         }
     }
-    creatDownloadButton()
+
+    if (JSON.stringify(moreThen[2]) === JSON.stringify({}) && JSON.stringify(moreThen[2]) === JSON.stringify({}) ) {
+        alert("קובץ לא תקין");
+    } else{
+
+        creatDownloadButton()
+
+    }
     }
     
     function builDateObj(performance,gap,jsonData,i,j){
@@ -103,7 +110,11 @@ function createNewExcel() {
     XLSX.utils.book_append_sheet(workbook, worksheet, '2');
     XLSX.utils.book_append_sheet(workbook, worksheet5, '5');
 
-    XLSX.writeFile(workbook, 'כפילויות.xlsx');
+     
+        XLSX.writeFile(workbook, 'כפילויות.xlsx');
+
+
+
 
 }
 
